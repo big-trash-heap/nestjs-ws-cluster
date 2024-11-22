@@ -24,11 +24,21 @@ export class AppGateway
   }
 
   handleConnection(client: WebSocket) {
-    console.log('connect', client.url);
+    console.log(
+      'connect',
+      client.readyState,
+      client.url,
+      this.server.clients.size,
+    );
   }
 
   handleDisconnect(client: WebSocket) {
-    console.log('disconnect', client.url);
+    console.log(
+      'disconnect',
+      client.readyState,
+      client.url,
+      this.server.clients.size,
+    );
   }
 
   @SubscribeMessage('events')
