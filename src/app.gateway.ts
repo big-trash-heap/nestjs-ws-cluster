@@ -7,11 +7,14 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Server, WebSocket } from 'ws';
+import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
   path: '/ws/gateway',
   transports: ['websocket'],
+  cors: {
+    origin: '*',
+  },
 })
 export class AppGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
@@ -23,17 +26,29 @@ export class AppGateway
     console.log('init', server === this.server);
   }
 
-  handleConnection(client: WebSocket) {
-    console.log('connect', client.url);
+  handleConnection(client: Socket) {
+    console.log('connect', client.id);
   }
 
-  handleDisconnect(client: WebSocket) {
-    console.log('disconnect', client.url);
+  handleDisconnect(client: Socket) {
+    console.log('disconnect', client.id);
+  }
+
+  @SubscribeMessage('message')
+  handleTypeMessage(
+    @MessageBody()
+    data: string,
+  ): any {
+    console.log('Message', data);
+    return {
+      event: 'message',
+      data: `reply<message>: ${JSON.stringify(data)}`,
+    };
   }
 
   @SubscribeMessage('events')
-  handleEvent(@MessageBody() data: string): string {
-    console.log(data);
-    return `replay: ${JSON.stringify(data)}`;
+  handleTypeEvents(@MessageBody() data: string): any {
+    console.log('Events', data);
+    return { event: 'events', data: `reply<events>: ${JSON.stringify(data)}` };
   }
 }
