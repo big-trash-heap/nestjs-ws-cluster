@@ -6,6 +6,7 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  WsResponse,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
@@ -38,7 +39,7 @@ export class AppGateway
   handleTypeMessage(
     @MessageBody()
     data: string,
-  ): any {
+  ): WsResponse<string> {
     console.log('Message', data);
     return {
       event: 'message',
@@ -47,7 +48,7 @@ export class AppGateway
   }
 
   @SubscribeMessage('events')
-  handleTypeEvents(@MessageBody() data: string): any {
+  handleTypeEvents(@MessageBody() data: string): WsResponse<string> {
     console.log('Events', data);
     return { event: 'events', data: `reply<events>: ${JSON.stringify(data)}` };
   }
