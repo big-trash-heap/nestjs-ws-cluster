@@ -22,6 +22,5 @@ REDIS_URL=redis://147.45.147.96:6379
 
 ```bash
 npm i
-npm install pm2 -g
-pm2 start npm --name "node-server" -- run start:dev
+npm run start:dev
 ```

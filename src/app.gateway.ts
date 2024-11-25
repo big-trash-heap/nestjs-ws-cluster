@@ -52,4 +52,9 @@ export class AppGateway
     console.log('Events', data);
     return { event: 'events', data: `reply<events>: ${JSON.stringify(data)}` };
   }
+
+  @SubscribeMessage('all')
+  handleBroadcast(@MessageBody() data: string): void {
+    this.server.emit('all', data);
+  }
 }
